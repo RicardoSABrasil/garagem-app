@@ -1,0 +1,20 @@
+# Node
+node_modules/
+dist/
+
+# Angular
+.angular/
+
+# .NET
+bin/
+obj/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
