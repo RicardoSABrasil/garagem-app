@@ -1,4 +1,4 @@
-@Garagem.Api_HostAddress = http://localhost:5200
+@Garagem.Api_HostAddress = http://localhost:5158
 
 GET {{Garagem.Api_HostAddress}}/weatherforecast/
 Accept: application/json

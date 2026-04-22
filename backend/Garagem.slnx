@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Garagem.Api/Garagem.Api.csproj" />
+    <Project Path="src/Garagem.Application/Garagem.Application.csproj" />
+    <Project Path="src/Garagem.Domain/Garagem.Domain.csproj" />
+    <Project Path="src/Garagem.Infrastructure/Garagem.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Garagem.Tests/Garagem.Tests.csproj" />
+  </Folder>
+</Solution>
