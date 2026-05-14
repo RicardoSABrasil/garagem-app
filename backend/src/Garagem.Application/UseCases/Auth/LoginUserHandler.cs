@@ -1,29 +1,34 @@
 ﻿using Garagem.Application.DTOs;
+using Garagem.Application.Services;
 using Garagem.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Garagem.Application.UseCases.Auth
+namespace Garagem.Application.UseCases.Auth;
+
+public class LoginUserHandler
 {
+	private readonly IUserRepository _repo;
+	private readonly JwtTokenGenerator _jwt;
 
-	public class LoginUserHandler
+	public LoginUserHandler(
+		IUserRepository repo,
+		JwtTokenGenerator jwt)
 	{
-		private readonly IUserRepository _repo;
+		_repo = repo;
+		_jwt = jwt;
+	}
 
-		public LoginUserHandler(IUserRepository repo)
+	public async Task<AuthResponse> Handle(LoginRequest request)
+	{
+		var user = await _repo.GetByEmailAsync(request.Email);
+
+		if (user == null ||
+			!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
 		{
-			_repo = repo;
+			throw new Exception("Credenciais inválidas");
 		}
 
-		public async Task<AuthResponse> Handle(LoginRequest request)
-		{
-			var user = await _repo.GetByEmailAsync(request.Email);
+		var token = _jwt.Generate(user);
 
-			if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-				throw new Exception("Credenciais inválidas");
-
-			return new AuthResponse("fake-jwt-token");
-		}
+		return new AuthResponse(token);
 	}
 }
