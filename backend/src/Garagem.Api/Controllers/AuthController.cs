@@ -5,6 +5,8 @@ using System.Reflection.Metadata;
 
 namespace Garagem.Api.Controllers
 {
+	[ApiController]
+	[Route("api/auth")]
 	public class AuthController : Controller
 	{
 		private readonly RegisterUserHandler _register;
