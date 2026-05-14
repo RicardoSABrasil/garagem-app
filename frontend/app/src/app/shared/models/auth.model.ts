@@ -2,23 +2,23 @@
  * Resposta de autenticação com token JWT
  */
 export interface AuthResponse {
-  token: string;
+  Token: string;
 }
 
 /**
  * Requisição de login
  */
 export interface LoginRequest {
-  email: string;
-  password: string;
+  Email: string;
+  Password: string;
 }
 
 /**
  * Requisição de registro
  */
 export interface RegisterRequest {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Password: string;
 }

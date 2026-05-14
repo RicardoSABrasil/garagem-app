@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { UserProfile, UpdateProfileRequest, UploadImageResponse } from '../models';
+import { UserProfile, UpdateProfileRequest, UploadImageResponse } from '../../shared/models';
 
 /**
  * Serviço para gerenciar dados do perfil do usuário

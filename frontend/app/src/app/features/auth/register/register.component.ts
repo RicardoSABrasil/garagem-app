@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services';
+import { RegisterRequest } from '../../../shared/models';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
   private readonly formBuilder = inject(FormBuilder);
@@ -20,11 +21,11 @@ export class RegisterComponent {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  registerForm = this.formBuilder.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+  readonly registerForm = this.formBuilder.group({
+    FirstName: ['', [Validators.required, Validators.minLength(2)]],
+    LastName: ['', [Validators.required, Validators.minLength(2)]],
+    Email: ['', [Validators.required, Validators.email]],
+    Password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   onSubmit(): void {
@@ -36,12 +37,14 @@ export class RegisterComponent {
     this.errorMessage = null;
     this.successMessage = null;
 
-    this.authService.register(this.registerForm.value as any).subscribe({
+    const newUser: RegisterRequest = this.registerForm.value as RegisterRequest;
+
+    this.authService.register(newUser).subscribe({
       next: () => {
         this.successMessage = 'Registro realizado com sucesso! Redirecionando...';
         setTimeout(() => {
           this.router.navigate(['/login']);
-        }, 2000);
+        }, 1600);
       },
       error: (error) => {
         this.isLoading = false;
@@ -51,7 +54,7 @@ export class RegisterComponent {
     });
   }
 
-  getFieldError(fieldName: string): string | null {
+  getFieldError(fieldName: keyof RegisterRequest): string | null {
     const control = this.registerForm.get(fieldName);
     if (!control?.touched) return null;
 

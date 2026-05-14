@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { UserService, AuthService } from '../../../core/services';
-import { UserProfile, UpdateProfileRequest } from '../../../shared/models';
+import { UserService, AuthService } from '../../core/services';
+import { UserProfile, UpdateProfileRequest, UploadImageResponse } from '../../shared/models';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
@@ -47,13 +47,13 @@ export class ProfileComponent implements OnInit {
   loadUserProfile(): void {
     this.isLoading = true;
     this.userService.getCurrentUser().subscribe({
-      next: (profile) => {
+      next: (profile: UserProfile) => {
         this.userProfile = profile;
-        this.previewImageUrl = profile.profileImageUrl || null;
+        this.previewImageUrl = profile.ProfileImageUrl || null;
         this.populateForm(profile);
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isLoading = false;
         this.errorMessage = 'Erro ao carregar perfil. Tente novamente.';
         console.error(error);
@@ -63,18 +63,18 @@ export class ProfileComponent implements OnInit {
 
   private populateForm(profile: UserProfile): void {
     this.profileForm.patchValue({
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      bio: profile.bio,
-      phoneNumber: profile.phoneNumber,
-      birthDate: this.formatDateForInput(profile.birthDate),
-      zipCode: profile.zipCode,
-      street: profile.street,
-      number: profile.number,
-      district: profile.district,
-      city: profile.city,
-      state: profile.state,
-      country: profile.country
+      firstName: profile.FirstName,
+      lastName: profile.LastName,
+      bio: profile.Bio,
+      phoneNumber: profile.PhoneNumber,
+      birthDate: this.formatDateForInput(profile.BirthDate),
+      zipCode: profile.ZipCode,
+      street: profile.Street,
+      number: profile.Number,
+      district: profile.District,
+      city: profile.City,
+      state: profile.State,
+      country: profile.Country
     });
   }
 
@@ -96,7 +96,7 @@ export class ProfileComponent implements OnInit {
     const updateRequest: UpdateProfileRequest = this.profileForm.value as any;
 
     this.userService.updateProfile(updateRequest).subscribe({
-      next: (profile) => {
+      next: (profile: UserProfile) => {
         this.userProfile = profile;
         this.isSaving = false;
         this.successMessage = 'Perfil atualizado com sucesso!';
@@ -104,7 +104,7 @@ export class ProfileComponent implements OnInit {
           this.successMessage = null;
         }, 3000);
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isSaving = false;
         this.errorMessage = error.error?.message || 'Erro ao atualizar perfil.';
       }
@@ -144,17 +144,17 @@ export class ProfileComponent implements OnInit {
     this.errorMessage = null;
 
     this.userService.uploadProfileImage(file).subscribe({
-      next: (response) => {
+      next: (response: UploadImageResponse) => {
         this.isUploading = false;
-        this.successMessage = response.message;
+        this.successMessage = response.Message;
         if (this.userProfile) {
-          this.userProfile.profileImageUrl = response.imageUrl;
+          this.userProfile.ProfileImageUrl = response.ImageUrl;
         }
         setTimeout(() => {
           this.successMessage = null;
         }, 3000);
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isUploading = false;
         this.errorMessage = error.error?.message || 'Erro ao fazer upload da imagem.';
       }

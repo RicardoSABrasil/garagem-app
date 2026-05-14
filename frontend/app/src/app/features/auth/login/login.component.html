@@ -3,11 +3,9 @@
     <h1>Garagem</h1>
     <h2>Login</h2>
 
-    @if (errorMessage) {
-      <div class="error-message">
-        {{ errorMessage }}
-      </div>
-    }
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
@@ -15,13 +13,13 @@
         <input
           id="email"
           type="email"
-          formControlName="email"
+          formControlName="Email"
           placeholder="seu.email@exemplo.com"
-          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          [class.error]="loginForm.get('Email')?.invalid && loginForm.get('Email')?.touched"
         />
-        @if (loginForm.get('email')?.touched && emailError) {
-          <span class="error-text">{{ emailError }}</span>
-        }
+        <span class="error-text" *ngIf="loginForm.get('Email')?.touched && emailError">
+          {{ emailError }}
+        </span>
       </div>
 
       <div class="form-group">
@@ -29,25 +27,18 @@
         <input
           id="password"
           type="password"
-          formControlName="password"
+          formControlName="Password"
           placeholder="Sua senha"
-          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          [class.error]="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched"
         />
-        @if (loginForm.get('password')?.touched && passwordError) {
-          <span class="error-text">{{ passwordError }}</span>
-        }
+        <span class="error-text" *ngIf="loginForm.get('Password')?.touched && passwordError">
+          {{ passwordError }}
+        </span>
       </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="loginForm.invalid || isLoading"
-      >
-        @if (isLoading) {
-          <span>Entrando...</span>
-        } @else {
-          <span>Entrar</span>
-        }
+      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="isLoading">Entrando...</span>
+        <span *ngIf="!isLoading">Entrar</span>
       </button>
     </form>
 
