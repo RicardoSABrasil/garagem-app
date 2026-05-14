@@ -1,0 +1,172 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>Meu Perfil</h1>
+    <button class="btn-logout" (click)="onLogout()" routerLink="/login">
+      Sair
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading">
+      <p>Carregando perfil...</p>
+    </div>
+  } @else {
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="success-message">
+        {{ successMessage }}
+      </div>
+    }
+
+    <div class="profile-content">
+      <!-- Seção de Foto -->
+      <div class="profile-image-section">
+        <div class="image-container">
+          @if (previewImageUrl) {
+            <img [src]="previewImageUrl" alt="Foto de perfil" />
+          } @else {
+            <div class="image-placeholder">
+              <span>Sem foto</span>
+            </div>
+          }
+        </div>
+
+        <div class="upload-section">
+          <h3>Foto de Perfil</h3>
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            style="display: none"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="fileInput.click()"
+            [disabled]="isUploading"
+          >
+            @if (isUploading) {
+              <span>Enviando...</span>
+            } @else {
+              <span>Escolher Imagem</span>
+            }
+          </button>
+          <p class="info-text">JPG, PNG ou WEBP | Máximo 5MB</p>
+        </div>
+      </div>
+
+      <!-- Seção de Dados -->
+      <div class="profile-data-section">
+        <h3>Informações Pessoais</h3>
+        <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">Primeiro Nome</label>
+              <input
+                id="firstName"
+                type="text"
+                formControlName="firstName"
+                [class.error]="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
+              />
+              @if (profileForm.get('firstName')?.touched && getFieldError('firstName')) {
+                <span class="error-text">{{ getFieldError('firstName') }}</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Último Nome</label>
+              <input
+                id="lastName"
+                type="text"
+                formControlName="lastName"
+                [class.error]="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
+              />
+              @if (profileForm.get('lastName')?.touched && getFieldError('lastName')) {
+                <span class="error-text">{{ getFieldError('lastName') }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" formControlName="bio" rows="4"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phoneNumber">Telefone</label>
+              <input id="phoneNumber" type="tel" formControlName="phoneNumber" />
+            </div>
+
+            <div class="form-group">
+              <label for="birthDate">Data de Nascimento</label>
+              <input id="birthDate" type="date" formControlName="birthDate" />
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <h4>Endereço</h4>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="zipCode">CEP</label>
+              <input id="zipCode" type="text" formControlName="zipCode" />
+            </div>
+
+            <div class="form-group">
+              <label for="street">Rua</label>
+              <input id="street" type="text" formControlName="street" />
+            </div>
+
+            <div class="form-group" style="max-width: 100px">
+              <label for="number">Número</label>
+              <input id="number" type="text" formControlName="number" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="district">Bairro</label>
+              <input id="district" type="text" formControlName="district" />
+            </div>
+
+            <div class="form-group">
+              <label for="city">Cidade</label>
+              <input id="city" type="text" formControlName="city" />
+            </div>
+
+            <div class="form-group">
+              <label for="state">Estado</label>
+              <input id="state" type="text" formControlName="state" />
+            </div>
+
+            <div class="form-group">
+              <label for="country">País</label>
+              <input id="country" type="text" formControlName="country" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="profileForm.invalid || isSaving"
+            >
+              @if (isSaving) {
+                <span>Salvando...</span>
+              } @else {
+                <span>Salvar Alterações</span>
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

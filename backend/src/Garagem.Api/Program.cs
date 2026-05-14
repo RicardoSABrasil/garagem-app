@@ -1,10 +1,13 @@
 using System.Text;
 
+using Amazon;
+using Amazon.S3;
 using Garagem.Application.Services;
 using Garagem.Application.UseCases.Auth;
 using Garagem.Application.UseCases.Profile;
 using Garagem.Domain.Interfaces;
 using Garagem.Infrastructure.Persistence;
+using Garagem.Infrastructure.Storage;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +22,41 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+// Registra os handlers de autenticação
 builder.Services.AddScoped<RegisterUserHandler>();
 builder.Services.AddScoped<LoginUserHandler>();
+
+// Registra os handlers de perfil
+builder.Services.AddScoped<GetCurrentUserHandler>();
+builder.Services.AddScoped<UpdateProfileHandler>();
 builder.Services.AddScoped<UploadProfileImageHandler>();
 
+// Registra o serviço JWT
 builder.Services.AddScoped<JwtTokenGenerator>();
+
+// Configuração do MinIO/S3
+var minioEndpoint = builder.Configuration["Minio:Endpoint"]
+	?? throw new Exception("Minio:Endpoint não configurado");
+var minioAccessKey = builder.Configuration["Minio:AccessKey"]
+	?? throw new Exception("Minio:AccessKey não configurado");
+var minioSecretKey = builder.Configuration["Minio:SecretKey"]
+	?? throw new Exception("Minio:SecretKey não configurado");
+
+// Registra o cliente S3 do AWS SDK (compatível com MinIO)
+builder.Services.AddScoped<IAmazonS3>(sp =>
+{
+	var config = new AmazonS3Config
+	{
+		ServiceURL = minioEndpoint,
+		ForcePathStyle = true,
+		SignatureVersion = "4"
+	};
+
+	return new AmazonS3Client(minioAccessKey, minioSecretKey, config);
+});
+
+// Registra o serviço de armazenamento
+builder.Services.AddScoped<IStorageService, MinioStorageService>();
 
 builder.Services.AddControllers();
 

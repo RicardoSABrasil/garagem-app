@@ -1,0 +1,92 @@
+<div class="register-container">
+  <div class="register-box">
+    <h1>Garagem</h1>
+    <h2>Criar Conta</h2>
+
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="success-message">
+        {{ successMessage }}
+      </div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="firstName">Primeiro Nome</label>
+        <input
+          id="firstName"
+          type="text"
+          formControlName="firstName"
+          placeholder="João"
+          [class.error]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+        />
+        @if (registerForm.get('firstName')?.touched && getFieldError('firstName')) {
+          <span class="error-text">{{ getFieldError('firstName') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Último Nome</label>
+        <input
+          id="lastName"
+          type="text"
+          formControlName="lastName"
+          placeholder="Silva"
+          [class.error]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+        />
+        @if (registerForm.get('lastName')?.touched && getFieldError('lastName') ) {
+          <span class="error-text">{{ getFieldError('lastName') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="seu.email@exemplo.com"
+          [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+        />
+        @if (registerForm.get('email')?.touched && getFieldError('email')) {
+          <span class="error-text">{{ getFieldError('email') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Sua senha"
+          [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+        />
+        @if (registerForm.get('password')?.touched && getFieldError('password')) {
+          <span class="error-text">{{ getFieldError('password') }}</span>
+        }
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+        @if (isLoading) {
+          <span>Criando conta...</span>
+        } @else {
+          <span>Criar Conta</span>
+        }
+      </button>
+    </form>
+
+    <p class="login-link">
+      Já tem conta? <a routerLink="/login">Faça login</a>
+    </p>
+  </div>
+</div>

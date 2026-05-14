@@ -21,7 +21,11 @@ namespace Garagem.Application.UseCases.Auth
 
 			var hash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-			var user = new User(request.Email, hash);
+			var user = new User(
+								request.FirstName,
+								request.LastName,
+								request.Email,
+								hash);
 
 			await _repo.AddAsync(user);
 		}
