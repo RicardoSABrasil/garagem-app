@@ -60,6 +60,17 @@ builder.Services.AddScoped<IStorageService, MinioStorageService>();
 
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowFrontend", policy =>
+	{
+		policy
+			.WithOrigins("http://localhost:4200")
+			.AllowAnyMethod()
+			.AllowAnyHeader();
+	});
+});
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
@@ -103,6 +114,8 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 
